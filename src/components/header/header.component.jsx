@@ -10,6 +10,9 @@ const Header = () => (
 </Link>
 
 <div className='options'>
+<Link className='option' to='/sign-in-and-sign-up'>
+SIGN-IN-OR-SIGN-UP
+</Link>
 <Link className='option' to='/shop'>
 SHOP
 </Link>
