@@ -3,7 +3,7 @@ import './App.css';
 import HomePage from './pages/homepage/homepage.component.jsx';
 import HatsPage from './pages/hatspage/hatspage.component.jsx';
 import ShopPage from './pages/shop/shop.component.jsx';
-import {Route, Switch} from 'react-router-dom';
+import {Route, Switch, Redirect} from 'react-router-dom';
 import Header from './components/header/header.component.jsx';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/sign-in-and-sign-up-page.component.jsx';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
@@ -13,12 +13,7 @@ class App extends React.Component {
 
 unsubscribeFromAuth = null;
 
-async sleep(ms) {
-  
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async componentDidMount (){
+componentDidMount (){
 const {setCurrentUser} = this.props;
   this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth =>{
     setCurrentUser(userAuth); 
@@ -28,7 +23,7 @@ const {setCurrentUser} = this.props;
     
          console.log("Found userRef.");
       userRef.onSnapshot(snapshot => {
-        
+
         setCurrentUser({
           
             id: snapshot.id,
@@ -56,17 +51,19 @@ componentWillUnmount(){
     <Route exact={true} path='/' component={HomePage}/>
     <Route exact={true} path='/hats' component={HatsPage}/>
     <Route exact={true} path='/shop' component={ShopPage}/>
-    <Route exact={true} path='/sign-in-and-sign-up' component={SignInAndSignUpPage}/>
+    <Route exact path='/sign-in-and-sign-up' render={() => this.props.currentUser ? (<Redirect to='/' />) : (<SignInAndSignUpPage />)}/>
     </Switch>
     </div>
   );
 
-}
+}}
 
-}
+const mapStateToProps = ({user}) => ({
+  currentUser: user.currentUser
+})
 
 const mapDispatchToProps = dispatch =>({
     setCurrentUser: user => dispatch(setCurrentUser(user))
 })
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
