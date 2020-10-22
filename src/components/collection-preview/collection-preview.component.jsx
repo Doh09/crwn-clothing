@@ -11,8 +11,8 @@ const CollectionPreview = ({title, items}) => (
 <div className='preview'>
 {items
     .filter((item, idx) =>  idx < 4) //idx = index, ligesom 'i' i en loop. Det her beregnes hver gang, så kan være en performance concern.
-    .map(({id, ...otherItemProps}) => (
-    <CollectionItem key={id} {...otherItemProps}/>
+    .map(item => (
+    <CollectionItem key={item.id} item={item}/>
 ))}
 </div>
 </div>
